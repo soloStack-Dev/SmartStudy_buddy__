@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartStudy Buddy</title>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <link rel="stylesheet" href="/css/chat.css">
+    <script src="/js/chat.js" defer></script>
+</head>
+<body>
+<div class="shell">
+    <div class="header">
+        <div>
+            <div class="title">SmartStudy Buddy</div>
+        </div>
+        <div class="badge">Chat · Notes Summary</div>
+    </div>
+
+    <div class="layout">
+        <div class="chat-container">
+            <div id="messages" class="messages">
+                <!-- Messages will be appended here by HTMX responses -->
+            </div>
+
+            <form
+                    hx-post="/chat"
+                    hx-target="#messages"
+                    hx-swap="beforeend"
+                    class="input-row"
+            >
+                <input
+                        type="text"
+                        name="message"
+                        placeholder="Ask any study question…"
+                        autocomplete="off"
+                        required
+                />
+                <button type="submit">Ask (local)</button>
+            </form>
+
+            <form
+                    hx-post="/search-chat"
+                    hx-target="#messages"
+                    hx-swap="beforeend"
+                    class="input-row"
+            >
+                <input
+                        type="text"
+                        name="message"
+                        placeholder="Ask with web search (uses internet)…"
+                        autocomplete="off"
+                        required
+                />
+                <button type="submit">Ask (web search)</button>
+            </form>
+        </div>
+
+        <aside class="sidebar">
+            <div class="sidebar-title">Study notes summary</div>
+            <p>Upload a PDF or text file, and SmartStudy Buddy will read it, embed it, and summarize the key ideas for you.</p>
+
+            <form
+                    class="upload-form"
+                    hx-post="/upload-notes"
+                    hx-encoding="multipart/form-data"
+                    hx-target="#messages"
+                    hx-swap="beforeend"
+            >
+                <input type="file" name="file" accept=".pdf,.txt,.md,.doc,.docx" required>
+                <button type="submit">Summarize notes</button>
+            </form>
+
+            <div class="sidebar-hint">
+                Behind the scenes, your document is parsed, converted into embeddings with LangChain4j, and then summarized by the same study chat model.
+            </div>
+        </aside>
+    </div>
+</div>
+</body>
+</html>
+
